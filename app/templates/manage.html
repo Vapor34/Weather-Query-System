@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+<br><br>
+<h1>Update Record Data</h1>
+<br><br>
+
+<p>You can only manage the data you created.</p>
+<p>Data are sorted by Query Time</p>
+
+    <section class="card p-4 mb-5 shadow-sm">
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Location</th>
+                    <th>Temp</th>
+                    <th>Min Temp</th>
+                    <th>Max Temp</th>
+                    <th>Wind Speed</th>
+                    <th>Cloudiness</th>
+                    <th>Status</th>
+                    <th>Query Time</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in records %}
+                <tr>
+                    <td>{{ record.location.formatted_address }}</td>
+                    <td>{{ record.temperature }}°C</td>
+                    <td>{{ record.min_temp }}°C</td>
+                    <td>{{ record.max_temp }}°C</td>
+                    <td>{{ record.wind_speed }}m/s</td>
+                    <td>{{ record.clouds }}%</td>
+                    <td>{{ record.weather_description }}</td>
+                    <td>{{ record.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                    <td>
+                        <a href="{{ url_for('update_record', record_id=record.id) }}" class="btn btn-primary btn-sm" >Update</a>
+                        <a href="{{ url_for('delete_record', record_id=record.id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Delete this record?')">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+
+
+
+{% endblock %}

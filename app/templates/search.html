@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <section>
+        <h2>Historical Records</h2>
+        <p>All the data are here.</p>
+        <p>Data are sorted by Date</p>
+        <div class="mb-3">
+            <a href="/export/json" class="btn btn-sm btn-outline-secondary">Export to JSON</a>
+        </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Location</th>
+                    <th>Temp</th>
+                    <th>Min Temp</th>
+                    <th>Max Temp</th>
+                    <th>Wind Speed</th>
+                    <th>Cloudiness</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Query Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in records %}
+                <tr>
+                    <td>{{ record.location.formatted_address }}</td>
+                    <td>{{ record.temperature }}°C</td>
+                    <td>{{ record.min_temp }}°C</td>
+                    <td>{{ record.max_temp }}°C</td>
+                    <td>{{ record.wind_speed }}m/s</td>
+                    <td>{{ record.clouds }}%</td>
+                    <td>{{ record.weather_description }}</td>
+                    <td>{{ record.date.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                    <td>{{ record.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+
+{% endblock %}

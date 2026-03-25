@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App - PM Accelerator</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body class="container mt-5">
+        <div>
+            {% if current_user.is_anonymous %}
+            | <a href="{{ url_for('login') }}">Login</a>
+            | <a href="{{ url_for('register') }}">Register</a> |
+            {% else %}
+            | <a href="{{ url_for('logout') }}">Logout</a>
+            | <a href="{{ url_for('index') }}">Home</a>
+            | <a href="{{ url_for('manage') }}">Manage Data</a>
+            | <a href="{{ url_for('search') }}">Existing Data</a> |
+            {% endif %}
+        </div>
+    <hr>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul>
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    {% endwith %}
+
+    <header class="mb-5 text-center">
+        <h1>Weather Query System</h1>
+        <p>Developed by: <strong>Junyu Wang</strong></p>
+        <div class="alert alert-info">
+            <strong>About PM Accelerator:</strong> The Product Manager Accelerator is a premier program
+            designed to help aspiring PMs land their dream roles through hands-on experience and expert mentorship.
+        </div>
+    </header>
+
+    <main>{% block content %}    {% endblock %}</main>
+
+    <footer class="mt-5 py-3 text-muted border-top text-center">
+        © 2024 Weather App for PM Accelerator Technical Assessment
+    </footer>
+
+</body>
+</html>

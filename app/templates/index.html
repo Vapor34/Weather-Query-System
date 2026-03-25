@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+    <section class="card p-4 mb-5 shadow-sm">
+        <h2>Get Weather Info/Create New Data</h2>
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <div class="row g-3">
+                <div class="col-md-4">
+                    {{ form.location.label }}(Zip Code/Postal Code, GPS Coordinates, Landmarks, Town, City, etc..) {{ form.location }}
+                </div>
+                <div class="col-md-4">
+                    {{ form.start_date.label }} {{ form.start_date }}
+                </div>
+                <div class="col-md-4">
+                    {{ form.end_date.label }} {{ form.end_date }}
+                </div>
+                <div class="col-md-2">
+                    {{ form.submit() }}
+                </div>
+            </div>
+        </form>
+
+    </section>
+
+    {% if last_query %}
+    <section class="card p-4 mb-5 shadow-sm">
+        <div class="last-query-box" style="border:1px solid #ccc; padding:15px; margin-bottom:20px; background:#f9f9f9;">
+            <h3>Result</h3><br>
+            {% if last_query.type == 'current' %}
+                <p><strong>Location:</strong>{{ last_query.location }} ({{ last_query.address }})</p>
+                <p><strong>Query Time:</strong>{{ last_query.timestamp }}</p>
+                <p><strong>Temperature:</strong>{{ last_query.temperature }}°C</p>
+                <p><strong>Description:</strong>{{ last_query.description }}</p>
+                <p><strong>Humidity:</strong>{{ last_query.humidity }}%</p>
+                <p><strong>Wind Speed:</strong>{{ last_query.wind_speed }} m/s</p>
+            {% elif last_query.type == 'historical' %}
+                <p><strong>Location:</strong>{{ last_query.location }}</p>
+                <p><strong>Date Range</strong>from {{ last_query.start_date }} to {{ last_query.end_date }}</p>
+                <p><strong>Number of Successfully Recorded:</strong>{{ last_query.success_count }}</p>
+                {% if last_query.error_dates %}
+                    <p><strong>Failed to Record</strong>{{ last_query.error_dates|join(', ') }}</p>
+                {% endif %}
+                <p><small>See detailed info below</small></p>
+            {% endif %}
+        </div>
+
+    </section>
+    {% endif %}
+
+
+    <section>
+        <h3>Historical Records(sorted by query time)</h3>
+        <div class="mb-3">
+            <a href="/export/json" class="btn btn-sm btn-outline-secondary">Export to JSON</a>
+        </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Location</th>
+                    <th>Temp</th>
+                    <th>Min Temp</th>
+                    <th>Max Temp</th>
+                    <th>Wind Speed</th>
+                    <th>Cloudiness</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Query Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in records %}
+                <tr>
+                    <td>{{ record.location.formatted_address }}</td>
+                    <td>{{ record.temperature }}°C</td>
+                    <td>{{ record.min_temp }}°C</td>
+                    <td>{{ record.max_temp }}°C</td>
+                    <td>{{ record.wind_speed }}m/s</td>
+                    <td>{{ record.clouds }}%</td>
+                    <td>{{ record.weather_description }}</td>
+                    <td>{{ record.date.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                    <td>{{ record.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block content %}
+<br><br>
+<h1>Update Record Data {{ record_id }}</h1>
+<br><br>
+    <section class="card p-4 mb-5 shadow-sm">
+
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Location</th>
+                    <th>Temp</th>
+                    <th>Min Temp</th>
+                    <th>Max Temp</th>
+                    <th>Wind Speed</th>
+                    <th>Cloudiness</th>
+                    <th>Status</th>
+                    <th>Query Time</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                <tr>
+                    <td>{{ record.location.formatted_address }}</td>
+                    <td>{{ record.temperature }}°C</td>
+                    <td>{{ record.min_temp }}°C</td>
+                    <td>{{ record.max_temp }}°C</td>
+                    <td>{{ record.wind_speed }}m/s</td>
+                    <td>{{ record.clouds }}%</td>
+                    <td>{{ record.weather_description }}</td>
+                    <td>{{ record.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+
+                </tr>
+            </tbody>
+        </table>
+    </section>
+<br>
+
+<section class="card p-4 mb-5 shadow-sm">
+    <h2>Fill in the data you want to update below. Leave blank if you don't want to change some data.</h2>
+
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        {{ form.min_temp.label }} {{ form.min_temp }} <br><br>
+        {{ form.max_temp.label }} {{ form.max_temp }} <br><br>
+        {{ form.wind_speed.label }} {{ form.wind_speed }}<br><br>
+        {{ form.clouds.label }} {{ form.clouds }} <br><br>
+        {{ form.status.label }} {{ form.status }} <br><br>
+        {{ form.submit() }}
+    </form>
+
+</section>
+
+
+
+{% endblock %}
