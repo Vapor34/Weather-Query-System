@@ -119,7 +119,7 @@ def index():
             current_date = start
             while current_date <= end:
                 print(current_date)
-                # 检查该日期是否已存在记录（避免重复插入）
+
                 existing = WeatherRecords.query.filter(
                     WeatherRecords.location_id == loc.id,
                     WeatherRecords.created_at >= datetime.combine(current_date, datetime.min.time()),
@@ -131,7 +131,6 @@ def index():
                     current_date += timedelta(days=1)
                     continue
 
-                # 获取该日期的历史数据
                 weather_info, error = get_historical_weather(loc_data['lat'], loc_data['lon'], current_date)
 
                 if error:
@@ -177,7 +176,6 @@ def index():
 
             return redirect(url_for('index'))
 
-        # READ: 展现所有历史记录
     records = WeatherRecords.query.order_by(WeatherRecords.created_at.desc()).all()
     last_query = session.pop('last_query', None)
     return render_template('index.html', form=form, records=records, last_query=last_query)
@@ -186,7 +184,6 @@ def index():
 @app.route('/delete/<int:record_id>')
 @login_required
 def delete_record(record_id):
-    # DELETE: 删除功能
     record = WeatherRecords.query.get_or_404(record_id)
     db.session.delete(record)
     db.session.commit()
@@ -194,7 +191,6 @@ def delete_record(record_id):
     return redirect(url_for('manage'))
 
 
-# 数据导出接口示例
 @app.route('/export/json')
 @login_required
 def export_json():

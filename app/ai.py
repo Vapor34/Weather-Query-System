@@ -6,14 +6,12 @@ from groq import Groq
 import logging
 from datetime import datetime, timedelta
 
-# 在文件开头配置日志（可选，便于调试）
 logging.basicConfig(level=logging.INFO)
 
-W_API_KEY = "7195d26d5cd2c53c4c9405470f02d32e"
-LLM_API_KEY = "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"
-MW_API_KEY = "270bdac40b9a7c78f2781395aaef907b"
+W_API_KEY = "create you own API key: https://openweathermap.org/"
+LLM_API_KEY = "create you own API key: https://console.groq.com"
+MW_API_KEY = "create you own API key: https://openweathermap.org/"
 def get_weather(loc_data):
-    # OpenWeatherMap 的地理编码 API（将城市名转为经纬度）
     weather_url = f"https://api.openweathermap.org/data/2.5/weather?lat={loc_data['lat']}&lon={loc_data['lon']}&appid={W_API_KEY}&units=metric"
 
     try:
@@ -34,13 +32,11 @@ def get_weather(loc_data):
         }, None
 
     except Exception as e:
-        return None, f"API request failed: {str(e)}"  # 符合错误处理要求
+        return None, f"API request failed: {str(e)}"
 
 
 def resolve_location(location_input):
-    """
-    使用 LLM 智能解析用户意图，并结合 OpenWeather 进行坐标转换
-    """
+
     try:
         client = Groq(api_key=LLM_API_KEY)
         clean_input = location_input.strip()
@@ -75,30 +71,20 @@ def resolve_location(location_input):
 
     except Exception as e:
         print(f"LLM Parsing failed: {e}")
-        # 降级处理：如果 AI 失败，设为默认值或返回错误信息，引导用户重新输入
-
 
 def get_historical_weather(lat, lon, target_date):
-    """
-    获取指定日期正午12点的历史天气数据
-    :param lat: 纬度
-    :param lon: 经度
-    :param target_date: datetime.date 对象
-    :return: (weather_info_dict, error_message) 元组
-    """
-    # 将 target_date 的 12:00:00 UTC 转换为 Unix 时间戳
+
     dt = datetime(target_date.year, target_date.month, target_date.day, 12, 0, 0)
     start_ts = int(dt.timestamp())
 
-    # 构建 API 请求 URL (使用 cnt=1 只获取这一小时的数据)
     url = "https://history.openweathermap.org/data/2.5/history/city"
     params = {
         'lat': lat,
         'lon': lon,
         'type': 'hour',
         'start': start_ts,
-        'cnt': 1,               # 只返回一条记录（即正午12点）
-        'units': 'metric',      # 使用摄氏度，与当前天气一致
+        'cnt': 1,
+        'units': 'metric',
         'appid': MW_API_KEY
     }
 
@@ -114,7 +100,6 @@ def get_historical_weather(lat, lon, target_date):
         if not hourly_list:
             return None, f"No data for {target_date} 12:00"
 
-        # 取第一条（也是唯一一条）数据
         hour_data = hourly_list[0]
         main = hour_data.get('main', {})
         wind = hour_data.get('wind', {})
@@ -124,10 +109,9 @@ def get_historical_weather(lat, lon, target_date):
         if temp is None:
             return None, f"No temperature data for {target_date} 12:00"
 
-        # 构造返回格式（与当前天气保持一致）
         weather_info = {
             'temp': temp,
-            'min_temp': temp,                # 历史单点数据，min/max 都使用该温度
+            'min_temp': temp,
             'max_temp': temp,
             'desc': 'Historical data (12:00 UTC)',
             'humidity': main.get('humidity'),

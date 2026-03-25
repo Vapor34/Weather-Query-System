@@ -31,9 +31,9 @@ class Locations(db.Model):
 
     id: Mapped[int] = mapped_column(sa.Integer, primary_key=True)
     input_query: Mapped[str] = mapped_column(sa.String(128), index=True)
-    formatted_address: Mapped[str] = mapped_column(sa.String(256))  # 验证后的规范地址 [cite: 58]
-    latitude: Mapped[float] = mapped_column(sa.Float)  # 经度，用于地图集成 [cite: 67]
-    longitude: Mapped[float] = mapped_column(sa.Float)  # 纬度
+    formatted_address: Mapped[str] = mapped_column(sa.String(256))
+    latitude: Mapped[float] = mapped_column(sa.Float)
+    longitude: Mapped[float] = mapped_column(sa.Float)
 
     records: Mapped[List["WeatherRecords"]] = relationship(
         back_populates="location", cascade="all, delete-orphan"
@@ -61,7 +61,7 @@ class WeatherRecords(db.Model):
     wind_speed: Mapped[Optional[float]] = mapped_column(sa.Float)
     clouds: Mapped[Optional[int]] = mapped_column(sa.Integer)
 
-    external_data: Mapped[Optional[str]] = mapped_column(sa.Text)  # 建议存储 JSON 字符串
+    external_data: Mapped[Optional[str]] = mapped_column(sa.Text)
 
     created_at: Mapped[datetime] = mapped_column(
         sa.DateTime, default=datetime.utcnow
@@ -74,9 +74,7 @@ class WeatherRecords(db.Model):
     user: Mapped["User"] = relationship(back_populates="records")
 
     def to_dict(self):
-        """
-        方便导出为 JSON/CSV 的辅助方法
-        """
+
         return {
             "id": self.id,
             "address": self.location.formatted_address,
