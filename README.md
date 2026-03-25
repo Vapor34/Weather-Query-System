@@ -1,24 +1,51 @@
 # Weather-Query-System
 This is a weather web for PM Accelerator Technical Assessment.
 
+---
+
+
 ### How to use it
 
+1.clone the project to your local.
 ```bash
-# 1.clone the project to your local.
+
 git clone https://github.com/Vapor34/Weather-Query-System.git
-# 2.Open it in PyCharm and create a virtual environment. Download
-# relative python packages
+```
+
+
+2.Open it in PyCharm and create a virtual environment. 
+Download relative python packages
+```bash
 pip install -r requirements.txt
-# 3.Create a database
+```
+3.In app/ai.py, you will find code like this:
+```commandline
+W_API_KEY = "create you own API key: https://openweathermap.org/"
+LLM_API_KEY = "create you own API key: https://console.groq.com"
+MW_API_KEY = "create you own API key: https://openweathermap.org/"
+```
+Get you own API key and fill in the quote. 
+
+4.Create a database
+```bash
 flask shell
-# In flask shell:
+```
+
+In flask shell:
+```bash
 from app import db
 db.create_all()
 exit()
-# Back to terminal
-flask run
-# Finally, open the url and you'll get there.
 ```
+
+Back to terminal
+```bash
+flask run
+```
+
+Finally, open the url and you'll get there.
+
+---
 
 ### Functionalities
 - User Authenticaiton System
@@ -36,3 +63,6 @@ Landmarks, Town, City, etc.
   - When location is not found.
   - When API encounters some problems.
   - When user's date input is wrong.
+- API Usage
+  - Groq API to convert various user input into coordinates of that place.
+  - OpenWeather API to fetch weather info.
