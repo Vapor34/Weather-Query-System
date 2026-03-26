@@ -3,6 +3,8 @@ This is a weather web for PM Accelerator Technical Assessment.
 
 ---
 
+### [Demo Video](https://www.bilibili.com/video/BV1i4X4BPEeh/?vd_source=8d8b0036d843634ac3ae12b45f1f831e)
+![example.png](pic/example.png)
 
 ## How to use 
 
