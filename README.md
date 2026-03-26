@@ -4,29 +4,29 @@ This is a weather web for PM Accelerator Technical Assessment.
 ---
 
 
-### How to use it
+## How to use 
 
-1.clone the project to your local.
+### 1.clone the project to your local.
 ```bash
 
 git clone https://github.com/Vapor34/Weather-Query-System.git
 ```
 
 
-2.Open it in PyCharm and create a virtual environment. 
+### 2.Open it in PyCharm and create a virtual environment. 
 Download relative python packages
 ```bash
 pip install -r requirements.txt
 ```
-3.In app/ai.py, you will find code like this:
+### 3.In .env.example file, you will find code like this:
 ```commandline
-W_API_KEY = "create you own API key: https://openweathermap.org/"
-LLM_API_KEY = "create you own API key: https://console.groq.com"
-MW_API_KEY = "create you own API key: https://openweathermap.org/"
+WEATHER_API_KEY = create your own weather API key: https://openweathermap.org/
+LLM_API_KEY = create your own LLM API key: https://console.groq.com
 ```
-Get you own API key and fill in the quote. 
+Get your own API key and fill in. Then rename '.env.example' file to '.env'.
 
-4.Create a database
+
+### 4.Create a database
 ```bash
 flask shell
 ```
