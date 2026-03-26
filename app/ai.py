@@ -5,19 +5,21 @@ import json
 from groq import Groq
 import logging
 from datetime import datetime, timedelta
+import os
 
 logging.basicConfig(level=logging.INFO)
 
-W_API_KEY = "create you own API key: https://openweathermap.org/"
-LLM_API_KEY = "create you own API key: https://console.groq.com"
-MW_API_KEY = "create you own API key: https://openweathermap.org/"
+
+W_API_KEY = os.getenv("WEATHER_API_KEY")
+LLM_API_KEY = os.getenv("LLM_API_KEY")
+MW_API_KEY = os.getenv("WEATHER_API_KEY")
+
 def get_weather(loc_data):
     weather_url = f"https://api.openweathermap.org/data/2.5/weather?lat={loc_data['lat']}&lon={loc_data['lon']}&appid={W_API_KEY}&units=metric"
 
     try:
 
         w_result = requests.get(weather_url).json()
-
         return {
             "address": w_result['name'],
             "temp": w_result['main']['temp'],
@@ -28,8 +30,10 @@ def get_weather(loc_data):
             "wind_speed": w_result['wind']['speed'],
             "clouds": w_result['clouds']['all'],
             "lat": loc_data['lat'],
-            "lon": loc_data['lon']
+            "lon": loc_data['lon'],
+            "icon": w_result['weather'][0]['icon']
         }, None
+
 
     except Exception as e:
         return None, f"API request failed: {str(e)}"
@@ -73,7 +77,7 @@ def resolve_location(location_input):
         print(f"LLM Parsing failed: {e}")
 
 def get_historical_weather(lat, lon, target_date):
-
+    # History API
     dt = datetime(target_date.year, target_date.month, target_date.day, 12, 0, 0)
     start_ts = int(dt.timestamp())
 
@@ -109,16 +113,24 @@ def get_historical_weather(lat, lon, target_date):
         if temp is None:
             return None, f"No temperature data for {target_date} 12:00"
 
+        weather_list = hour_data.get('weather', [])
+        icon = ""
+        desc = 'Historical data: '
+        if weather_list:
+            icon = weather_list[0].get('icon', '')
+            desc = desc + weather_list[0].get('description', '')
+
         weather_info = {
             'temp': temp,
             'min_temp': temp,
             'max_temp': temp,
-            'desc': 'Historical data (12:00 UTC)',
+            'desc': desc,
             'humidity': main.get('humidity'),
             'wind_speed': wind.get('speed'),
             'clouds': clouds.get('all'),
             'address': None,
-            'date': target_date
+            'date': target_date,
+            'icon': icon
         }
         print("Successfully return historical value!")
         return weather_info, None

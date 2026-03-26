@@ -47,10 +47,6 @@ def index():
 
         # case1: No specific date
         if not start_date and not end_date:
-            weather_info, error = get_weather(loc_data)
-            if error:
-                flash(error)
-                return redirect(url_for('index'))
 
             weather_info, error = get_weather(loc_data)
             if error:
@@ -74,8 +70,10 @@ def index():
                 humidity = weather_info['humidity'],
                 wind_speed = weather_info['wind_speed'],
                 clouds = weather_info['clouds'],
+                icon = weather_info['icon'],
                 user_id = current_user.id
             )
+            print(f"icon {weather_info['icon']}")
             db.session.add(new_record)
             db.session.commit()
             session['last_query'] = {
@@ -118,12 +116,12 @@ def index():
 
             current_date = start
             while current_date <= end:
-                print(current_date)
+
 
                 existing = WeatherRecords.query.filter(
                     WeatherRecords.location_id == loc.id,
-                    WeatherRecords.created_at >= datetime.combine(current_date, datetime.min.time()),
-                    WeatherRecords.created_at < datetime.combine(current_date + timedelta(days=1), datetime.min.time())
+                    WeatherRecords.date >= datetime.combine(current_date, datetime.min.time()),
+                    WeatherRecords.date < datetime.combine(current_date + timedelta(days=1), datetime.min.time())
                 ).first()
 
                 if existing:
@@ -149,7 +147,8 @@ def index():
                     wind_speed=weather_info['wind_speed'],
                     clouds=weather_info['clouds'],
                     date=datetime.combine(current_date, datetime.min.time()),
-                    user_id=current_user.id
+                    user_id=current_user.id,
+                    icon=weather_info['icon']
                 )
                 db.session.add(new_record)
                 success_count += 1

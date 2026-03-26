@@ -12,6 +12,7 @@
         <table class="table table-striped">
             <thead>
                 <tr>
+                    <th></th>
                     <th>Location</th>
                     <th>Temp</th>
                     <th>Min Temp</th>
@@ -26,6 +27,11 @@
             <tbody>
                 {% for record in records %}
                 <tr>
+                    <td>
+                        <div class="weather-bg">
+                            <img src="https://openweathermap.org/payload/api/media/file/{{ record.icon }}.png" width="50" alt="">
+                        </div>
+                    </td>
                     <td>{{ record.location.formatted_address }}</td>
                     <td>{{ record.temperature }}°C</td>
                     <td>{{ record.min_temp }}°C</td>

@@ -60,6 +60,7 @@ class WeatherRecords(db.Model):
     humidity: Mapped[Optional[int]] = mapped_column(sa.Integer)
     wind_speed: Mapped[Optional[float]] = mapped_column(sa.Float)
     clouds: Mapped[Optional[int]] = mapped_column(sa.Integer)
+    icon: Mapped[Optional[str]] = mapped_column(sa.String)
 
     external_data: Mapped[Optional[str]] = mapped_column(sa.Text)
 
